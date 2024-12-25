@@ -9,9 +9,9 @@ class JumpGame {
             this.player,
             ...obstacleSpawner.obstacles
         ];
-        this.tickables = [...this.objects, obstacleSpawner];
-        const renderables = this.objects.map(o => o.renderer);
-        this.renderer = new CanvasRendering("#app", renderables);
+        const collisionDetector = new CollisionDetector(this.objects);
+        this.tickables = [...this.objects, obstacleSpawner, collisionDetector];
+        this.renderer = new CanvasRendering("#app", this.objects.map(o => o.renderer));
         this.addListeners();
         this.startGameLoop();
     }
@@ -53,5 +53,21 @@ class ObstacleSpawner {
                 o.transform.position.set(this.spawnPoint.x + Math.random() * 2000, this.spawnPoint.y);
             }
         });
+    }
+}
+class CollisionDetector {
+    constructor(objects) {
+        this.objects = objects;
+        this.transforms = this.objects.map(o => o.transform);
+    }
+    tick() {
+        for (let i = 0; i < this.transforms.length; i++) {
+            for (let j = i + 1; j < this.transforms.length; j++) {
+                if (this.transforms[i].intersects(this.transforms[j])) {
+                    this.objects[i].intersects(this.objects[j]);
+                    this.objects[j].intersects(this.objects[i]);
+                }
+            }
+        }
     }
 }

@@ -12,6 +12,9 @@ export abstract class GameObject implements ITickable {
     tick() {
         this.transform.tick();
     }
+    intersects(other: GameObject) {
+        console.log(`${this.constructor.name} intersects ${other.constructor.name}`);
+    }
 }
 
 export class Player extends GameObject {

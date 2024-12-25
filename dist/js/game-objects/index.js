@@ -9,6 +9,9 @@ export class GameObject {
     tick() {
         this.transform.tick();
     }
+    intersects(other) {
+        console.log(`${this.constructor.name} intersects ${other.constructor.name}`);
+    }
 }
 export class Player extends GameObject {
     constructor() {

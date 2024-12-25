@@ -16,6 +16,12 @@ export class Transform {
     get isAtLeftBound() {
         return this.position.x + this.size.x <= 0;
     }
+    intersects(other) {
+        return this.position.x < other.position.x + other.size.x &&
+            this.position.x + this.size.x > other.position.x &&
+            this.position.y < other.position.y + other.size.y &&
+            this.position.y + this.size.y > other.position.y;
+    }
     tick() {
         if (this.hasGravity && !this.touchesGround) {
             this.velocity.y += Physics.g;

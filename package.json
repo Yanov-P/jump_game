@@ -9,8 +9,8 @@
     "typescript": "^5.7.2"
   },
   "scripts": {
-  "ts": "tsc -w",
-  "serve": "cd dist && web-dev-server --node-resolve --watch --open --app-index index.html",
-  "dev": "yarn ts & yarn serve"
+    "ts": "tsc -w",
+    "serve": "cd dist && web-dev-server --node-resolve --watch --open --app-index index.html",
+    "dev": "yarn ts & yarn serve"
  }
 }

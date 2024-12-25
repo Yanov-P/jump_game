@@ -1,4 +1,4 @@
-import { ITickable, Vector2 } from "./engine/index";
+import { ITickable, Transform, Vector2 } from "./engine/index";
 import { GameObject, Obstacle, Player } from "./game-objects/index";
 import { CanvasRendering } from "./rendering/index";
 
@@ -21,10 +21,11 @@ export default class JumpGame {
             ...obstacleSpawner.obstacles
         ];
 
-        this.tickables = [...this.objects, obstacleSpawner];
+        const collisionDetector = new CollisionDetector(this.objects);
 
-        const renderables = this.objects.map(o => o.renderer);
-        this.renderer = new CanvasRendering("#app", renderables);
+        this.tickables = [...this.objects, obstacleSpawner, collisionDetector];
+
+        this.renderer = new CanvasRendering("#app", this.objects.map(o => o.renderer));
 
         this.addListeners();
         this.startGameLoop();
@@ -72,6 +73,28 @@ class ObstacleSpawner implements ITickable {
                 o.transform.position.set(this.spawnPoint.x + Math.random() * 2000, this.spawnPoint.y);
             }
         })
+    }
+}
+
+class CollisionDetector implements ITickable {
+
+    objects: GameObject[]
+    transforms: Transform[]
+
+    constructor(objects: GameObject[]) {
+        this.objects = objects;
+        this.transforms = this.objects.map(o => o.transform);
+    }
+
+    tick() {
+        for (let i = 0; i < this.transforms.length; i++) {
+            for (let j = i + 1; j < this.transforms.length; j++) {
+                if (this.transforms[i].intersects(this.transforms[j])) {
+                    this.objects[i].intersects(this.objects[j]);
+                    this.objects[j].intersects(this.objects[i]);
+                }
+            }
+        }
     }
 
 }
