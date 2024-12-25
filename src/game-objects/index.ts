@@ -34,6 +34,13 @@ export class Player extends GameObject {
         this.transform.position.y = JumpGame.height - this.transform.size.y - 2;
         this.transform.velocity.y = -20;
     }
+
+    intersects(other: GameObject): void {
+        super.intersects(other);
+        if(other instanceof Obstacle) {
+            JumpGame.instance.end();
+        }
+    }
 }
 
 export class Obstacle extends GameObject {

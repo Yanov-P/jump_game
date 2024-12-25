@@ -7,8 +7,27 @@
 </head>
 <body style="background-color: burlywood; display: flex; align-items: center; flex-direction: column;">
     <h1>Welcome to Jump Game</h1>
-    <div id="app" style="width: 1200px; height: 300px; background-color: aqua;"></div>
-    <button id="tick">tick</button>
+    <div id="app" style="
+        position: relative;
+        width: 1200px;
+        height: 300px;
+        background-color: aqua;
+    ">
+        <div id="modal" style="
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        ">
+            <h2 id="message" style="color: white; margin-right: 20px;"></h2>
+            <button id="start">Start</button>
+        </div>
+    </div>
 </body>
 </html>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/typescript/4.4.3/typescript.min.js"></script>

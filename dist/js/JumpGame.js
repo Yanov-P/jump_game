@@ -1,8 +1,10 @@
 import { Vector2 } from "./engine/index";
 import { Obstacle, Player } from "./game-objects/index";
 import { CanvasRendering } from "./rendering/index";
+import { UI } from "./ui/index";
 class JumpGame {
     constructor() {
+        this.tickSpeed = 0;
         this.player = new Player();
         const obstacleSpawner = new ObstacleSpawner();
         this.objects = [
@@ -12,17 +14,9 @@ class JumpGame {
         const collisionDetector = new CollisionDetector(this.objects);
         this.tickables = [...this.objects, obstacleSpawner, collisionDetector];
         this.renderer = new CanvasRendering("#app", this.objects.map(o => o.renderer));
-        this.addListeners();
+        this.ui = new UI();
         this.startGameLoop();
-    }
-    addListeners() {
-        var _a;
-        (_a = document.getElementById("tick")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => this.tick());
-        document.addEventListener("keydown", (event) => {
-            if (event.code === "Space") {
-                this.jumpButtonPressed();
-            }
-        });
+        JumpGame.instance = this;
     }
     jumpButtonPressed() {
         this.player.jump();
@@ -30,13 +24,27 @@ class JumpGame {
     startGameLoop() {
         const gameLoop = () => {
             this.tick();
-            setTimeout(gameLoop, 1000 / 60); // 60 FPS
+            const timeoutDuration = 1000 / (60 * this.tickSpeed);
+            if (!Number.isFinite(timeoutDuration)) {
+                return;
+            }
+            setTimeout(gameLoop, 1000 / (60 * this.tickSpeed)); // 60 FPS
         };
         gameLoop();
     }
     tick() {
         this.tickables.forEach(t => t.tick());
         this.renderer.render();
+    }
+    end() {
+        this.tickSpeed = 0;
+        this.ui.showModal("You lose!");
+    }
+    start() {
+        console.log("start");
+        this.ui.hideModal();
+        this.tickSpeed = 1;
+        this.startGameLoop();
     }
 }
 JumpGame.width = 1200;
