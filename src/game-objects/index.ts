@@ -34,11 +34,11 @@ export class Player extends GameObject {
 }
 
 export class Obstacle extends GameObject {
-    constructor() {
+    constructor(index = 0) {
         const transform = new Transform({
-            position: new Vector2(900, 240),
+            position: new Vector2(900 * (index + 1), 240),
             size: new Vector2(20, 60),
-            velocity: new Vector2(-10, 0)
+            velocity: new Vector2(-7, 0)
         });
         super(transform, new RectRenderer(transform, "red"))
     }

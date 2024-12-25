@@ -63,14 +63,13 @@ class ObstacleSpawner implements ITickable {
     private spawnPoint = new Vector2(JumpGame.width + 100, 240);
 
     constructor() {
-        this.obstacles = [new Obstacle()];
+        this.obstacles = [new Obstacle(), new Obstacle(1)];
     }
 
     tick() {
         this.obstacles.forEach(o => {
-            console.log(o.transform.position.x, o.transform.isAtLeftBound)
             if (o.transform.isAtLeftBound) {
-                o.transform.position.set(this.spawnPoint.x, this.spawnPoint.y);
+                o.transform.position.set(this.spawnPoint.x + Math.random() * 2000, this.spawnPoint.y);
             }
         })
     }
