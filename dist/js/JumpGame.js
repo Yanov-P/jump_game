@@ -2,16 +2,27 @@ import { Obstacle, Player } from "./game-objects/index";
 import { CanvasRendering } from "./rendering/index";
 class JumpGame {
     constructor() {
-        var _a;
+        this.player = new Player();
         this.objects = [
-            new Player(),
+            this.player,
             new Obstacle()
         ];
         const renderables = this.objects.map(o => o.renderer);
         this.renderer = new CanvasRendering("#app", renderables);
-        this.tick();
+        this.addListeners();
         this.startGameLoop();
+    }
+    addListeners() {
+        var _a;
         (_a = document.getElementById("tick")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => this.tick());
+        document.addEventListener("keydown", (event) => {
+            if (event.code === "Space") {
+                this.jumpButtonPressed();
+            }
+        });
+    }
+    jumpButtonPressed() {
+        this.player.jump();
     }
     startGameLoop() {
         const gameLoop = () => {
