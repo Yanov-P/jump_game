@@ -40,6 +40,24 @@ export class RectRenderer {
         context.fillRect(this.transform.position.x, this.transform.position.y, this.transform.size.x, this.transform.size.y);
     }
     ;
+}
+export class ImageRenderer {
+    constructor(imageSrcs, transform = new Transform()) {
+        this.ANIMATION_SPEED = 300;
+        this.images = imageSrcs.map(imageSrc => {
+            const image = new Image();
+            image.src = imageSrc;
+            return image;
+        });
+        this.currentImage = this.images[0];
+        this.transform = transform;
+    }
+    tick() {
+        this.currentImage = this.images[Math.floor((new Date().getTime() / this.ANIMATION_SPEED) % this.images.length)];
+    }
+    render(context) {
+        context.drawImage(this.currentImage, this.transform.position.x, this.transform.position.y, this.transform.size.x, this.transform.size.y);
+    }
     setTransform(transform) {
         this.transform = transform;
     }

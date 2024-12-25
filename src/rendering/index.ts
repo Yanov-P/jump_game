@@ -1,4 +1,4 @@
-import { Transform, Vector2 } from "../engine/index";
+import { ITickable, Transform, Vector2 } from "../engine/index";
 
 export interface ICanvasRenderable {
     render: (context: CanvasRenderingContext2D) => void
@@ -60,6 +60,37 @@ export class RectRenderer implements ICanvasRenderable {
         context.fillStyle = this.fillStyle;
         context.fillRect(this.transform.position.x, this.transform.position.y, this.transform.size.x, this.transform.size.y);
     };
+}
+
+export class ImageRenderer implements ICanvasRenderable, ITickable {
+    private images: HTMLImageElement[];
+    private transform: Transform;
+    private ANIMATION_SPEED = 300;
+    private currentImage: HTMLImageElement
+
+    constructor(imageSrcs: string[], transform: Transform = new Transform()) {
+        this.images = imageSrcs.map(imageSrc => {
+            const image = new Image();
+            image.src = imageSrc
+            return image;
+        });
+        this.currentImage = this.images[0];
+        this.transform = transform;
+    }
+
+    tick() {
+        this.currentImage = this.images[Math.floor((new Date().getTime() / this.ANIMATION_SPEED) % this.images.length)];
+    }
+
+    render(context: CanvasRenderingContext2D) {
+        context.drawImage(
+            this.currentImage,
+            this.transform.position.x,
+            this.transform.position.y,
+            this.transform.size.x,
+            this.transform.size.y
+        );
+    }
 
     setTransform(transform: Transform) {
         this.transform = transform;
