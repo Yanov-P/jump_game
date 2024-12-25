@@ -22,19 +22,22 @@ export class CanvasRendering {
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
     render() {
+        this.clear();
         this.renderables.forEach(r => r.render(this.context));
+    }
+    clear() {
+        this.context.fillStyle = 'white';
+        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }
 export class RectRenderer {
     constructor(transform = new Transform(), fillStyle = "purple") {
         this.transform = transform;
         this.fillStyle = fillStyle;
-        console.log("renderer");
     }
     render(context) {
         context.fillStyle = this.fillStyle;
         context.fillRect(this.transform.position.x, this.transform.position.y, this.transform.size.x, this.transform.size.y);
-        console.log(this.transform);
     }
     ;
     setTransform(transform) {

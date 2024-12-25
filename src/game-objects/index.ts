@@ -8,24 +8,28 @@ export abstract class GameObject {
         this.transform = transform;
         this.renderer = renderer;
     }
+    tick() {
+        this.transform.tick();
+    }
 }
 
 export class Player extends GameObject {
     constructor() {
-        const transform = new Transform(
-            new Vector2(50, 220),
-            new Vector2(40, 80)
-        )
+        const transform = new Transform({
+            position: new Vector2(50, 50), 
+            size: new Vector2(40, 80),
+            hasGravity: true
+        })
         super(transform, new RectRenderer(transform));
     }
 }
 
 export class Obstacle extends GameObject {
     constructor() {
-        const transform = new Transform(
-            new Vector2(900, 240),
-            new Vector2(20, 60)
-        );
+        const transform = new Transform({
+            position: new Vector2(900, 240),
+            size: new Vector2(20, 60),
+        });
         super(transform, new RectRenderer(transform))
     }
 }
