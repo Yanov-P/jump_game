@@ -13,9 +13,19 @@ export abstract class GameObject {
 export class Player extends GameObject {
     constructor() {
         const transform = new Transform(
-            new Vector2(0, 220),
+            new Vector2(50, 220),
             new Vector2(40, 80)
         )
         super(transform, new RectRenderer(transform));
+    }
+}
+
+export class Obstacle extends GameObject {
+    constructor() {
+        const transform = new Transform(
+            new Vector2(900, 240),
+            new Vector2(20, 60)
+        );
+        super(transform, new RectRenderer(transform))
     }
 }
