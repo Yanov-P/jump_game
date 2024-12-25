@@ -13,6 +13,9 @@ export class Transform {
     get touchesGround() {
         return (this.size.y + this.position.y) >= JumpGame.height;
     }
+    get isAtLeftBound() {
+        return this.position.x + this.size.x <= 0;
+    }
     tick() {
         if (this.hasGravity && !this.touchesGround) {
             this.velocity.y += Physics.g;
@@ -32,5 +35,9 @@ export class Vector2 {
     add(vector) {
         this.x = this.x + vector.x;
         this.y = this.y + vector.y;
+    }
+    set(x = 0, y = 0) {
+        this.x = x;
+        this.y = y;
     }
 }

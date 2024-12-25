@@ -1,10 +1,14 @@
 import JumpGame from "../JumpGame";
 
+export interface ITickable {
+    tick: () => void
+}
+
 export class Physics {
     static g = 0.98;
 }
 
-export class Transform {
+export class Transform implements ITickable {
     position: Vector2
     size: Vector2
     hasGravity: boolean
@@ -19,6 +23,10 @@ export class Transform {
 
     get touchesGround(): boolean {
         return (this.size.y + this.position.y) >= JumpGame.height;
+    }
+
+    get isAtLeftBound(): boolean {
+        return this.position.x + this.size.x <= 0;
     }
 
     tick() {
@@ -54,5 +62,10 @@ export class Vector2 {
     add(vector: Vector2) {
         this.x = this.x + vector.x;
         this.y = this.y + vector.y;
+    }
+
+    set(x: number = 0, y: number = 0) {
+        this.x = x;
+        this.y = y;
     }
 }

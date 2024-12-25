@@ -1,8 +1,8 @@
-import { Transform, Vector2 } from "../engine/index";
+import { ITickable, Transform, Vector2 } from "../engine/index";
 import JumpGame from "../JumpGame";
 import { ICanvasRenderable, RectRenderer } from "../rendering/index";
 
-export abstract class GameObject {
+export abstract class GameObject implements ITickable {
     transform: Transform
     renderer: ICanvasRenderable
     constructor(transform = new Transform(), renderer = new RectRenderer()) {
