@@ -1,18 +1,27 @@
-import { Vector2 } from "./engine/index";
-import { Obstacle, Player } from "./game-objects/index";
+import { CollisionDetector } from "./engine/CollisionDetector";
+import { Player } from "./game-objects/index";
+import { ObstacleSpawner } from "./ObstacleSpawner";
 import { CanvasRendering } from "./rendering/index";
 import { UI } from "./ui/index";
 class JumpGame {
+    get score() {
+        return this._score;
+    }
+    set score(val) {
+        this.ui.showScore(val);
+        this._score = val;
+    }
     constructor() {
         this.tickSpeed = 0;
+        this._score = 0;
         this.player = new Player();
-        const obstacleSpawner = new ObstacleSpawner();
+        this.obstacleSpawner = new ObstacleSpawner();
         this.objects = [
             this.player,
-            ...obstacleSpawner.obstacles
+            ...this.obstacleSpawner.obstacles
         ];
         const collisionDetector = new CollisionDetector(this.objects);
-        this.tickables = [...this.objects, obstacleSpawner, collisionDetector];
+        this.tickables = [...this.objects, this.obstacleSpawner, collisionDetector];
         this.renderer = new CanvasRendering("#app", this.objects.map(o => o.renderer));
         this.ui = new UI();
         this.startGameLoop();
@@ -38,44 +47,28 @@ class JumpGame {
     }
     end() {
         this.tickSpeed = 0;
-        this.ui.showModal("You lose!");
+        this.ui.showModal("You lose! Score: " + this.score);
+    }
+    pause() {
+        this.tickSpeed = 0;
+        this.ui.showModal("Pause");
     }
     start() {
-        console.log("start");
+        this.ui.hideModal();
+        this.tickSpeed = 1;
+        this.score = 0;
+        this.obstacleSpawner.reset();
+        this.startGameLoop();
+    }
+    resume() {
         this.ui.hideModal();
         this.tickSpeed = 1;
         this.startGameLoop();
+    }
+    addScore() {
+        this.score++;
     }
 }
 JumpGame.width = 1200;
 JumpGame.height = 300;
 export default JumpGame;
-class ObstacleSpawner {
-    constructor() {
-        this.spawnPoint = new Vector2(JumpGame.width + 100, 240);
-        this.obstacles = [new Obstacle(), new Obstacle(1)];
-    }
-    tick() {
-        this.obstacles.forEach(o => {
-            if (o.transform.isAtLeftBound) {
-                o.transform.position.set(this.spawnPoint.x + Math.random() * 2000, this.spawnPoint.y);
-            }
-        });
-    }
-}
-class CollisionDetector {
-    constructor(objects) {
-        this.objects = objects;
-        this.transforms = this.objects.map(o => o.transform);
-    }
-    tick() {
-        for (let i = 0; i < this.transforms.length; i++) {
-            for (let j = i + 1; j < this.transforms.length; j++) {
-                if (this.transforms[i].intersects(this.transforms[j])) {
-                    this.objects[i].intersects(this.objects[j]);
-                    this.objects[j].intersects(this.objects[i]);
-                }
-            }
-        }
-    }
-}

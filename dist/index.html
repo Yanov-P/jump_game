@@ -7,6 +7,7 @@
 </head>
 <body style="background-color: burlywood; display: flex; align-items: center; flex-direction: column;">
     <h1>Welcome to Jump Game</h1>
+    <p>Score: <span id="score">0</span></p>
     <div id="app" style="
         position: relative;
         width: 1200px;
@@ -23,8 +24,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
+            gap: 20px;
         ">
-            <h2 id="message" style="color: white; margin-right: 20px;"></h2>
+            <h2 id="message" style="color: white;"></h2>
             <button id="start">Start</button>
         </div>
     </div>

@@ -1,5 +1,7 @@
-import { ITickable, Transform, Vector2 } from "./engine/index";
-import { GameObject, Obstacle, Player } from "./game-objects/index";
+import { CollisionDetector } from "./engine/CollisionDetector";
+import { ITickable } from "./engine/index";
+import { GameObject, Player } from "./game-objects/index";
+import { ObstacleSpawner } from "./ObstacleSpawner";
 import { CanvasRendering } from "./rendering/index";
 import { UI } from "./ui/index";
 
@@ -15,19 +17,28 @@ export default class JumpGame {
     private player: Player
     private tickSpeed = 0;
     private ui: UI
+    private obstacleSpawner: ObstacleSpawner
+    private _score = 0;
+    get score() {
+        return this._score;
+    }
+    set score(val: number) {
+        this.ui.showScore(val);
+        this._score = val;
+    }
     
     constructor() {
         this.player = new Player();
-        const obstacleSpawner = new ObstacleSpawner();
+        this.obstacleSpawner = new ObstacleSpawner();
 
         this.objects = [
             this.player,
-            ...obstacleSpawner.obstacles
+            ...this.obstacleSpawner.obstacles
         ];
 
         const collisionDetector = new CollisionDetector(this.objects);
 
-        this.tickables = [...this.objects, obstacleSpawner, collisionDetector];
+        this.tickables = [...this.objects, this.obstacleSpawner, collisionDetector];
 
         this.renderer = new CanvasRendering("#app", this.objects.map(o => o.renderer));
 
@@ -59,54 +70,29 @@ export default class JumpGame {
 
     end() {
         this.tickSpeed = 0;
-        this.ui.showModal("You lose!");
+        this.ui.showModal("You lose! Score: " + this.score);
+    }
+
+    pause() {
+        this.tickSpeed = 0;
+        this.ui.showModal("Pause")
     }
 
     start() {
-        console.log("start")
+        this.ui.hideModal();
+        this.tickSpeed = 1;
+        this.score = 0;
+        this.obstacleSpawner.reset();
+        this.startGameLoop();
+    }
+
+    resume() {
         this.ui.hideModal();
         this.tickSpeed = 1;
         this.startGameLoop();
     }
-}
 
-class ObstacleSpawner implements ITickable {
-
-    obstacles: Obstacle[]
-    private spawnPoint = new Vector2(JumpGame.width + 100, 240);
-
-    constructor() {
-        this.obstacles = [new Obstacle(), new Obstacle(1)];
+    addScore() {
+        this.score++;
     }
-
-    tick() {
-        this.obstacles.forEach(o => {
-            if (o.transform.isAtLeftBound) {
-                o.transform.position.set(this.spawnPoint.x + Math.random() * 2000, this.spawnPoint.y);
-            }
-        })
-    }
-}
-
-class CollisionDetector implements ITickable {
-
-    objects: GameObject[]
-    transforms: Transform[]
-
-    constructor(objects: GameObject[]) {
-        this.objects = objects;
-        this.transforms = this.objects.map(o => o.transform);
-    }
-
-    tick() {
-        for (let i = 0; i < this.transforms.length; i++) {
-            for (let j = i + 1; j < this.transforms.length; j++) {
-                if (this.transforms[i].intersects(this.transforms[j])) {
-                    this.objects[i].intersects(this.objects[j]);
-                    this.objects[j].intersects(this.objects[i]);
-                }
-            }
-        }
-    }
-
 }
