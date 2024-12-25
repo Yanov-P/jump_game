@@ -10,7 +10,7 @@
   },
   "scripts": {
     "ts": "tsc -w",
-    "serve": "cd dist && web-dev-server --node-resolve --watch --open --app-index index.html",
+    "serve": "cd docs && web-dev-server --node-resolve --watch --open --app-index index.html",
     "dev": "yarn ts & yarn serve"
  }
 }
