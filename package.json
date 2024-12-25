@@ -1,0 +1,16 @@
+{
+  "name": "jump_game",
+  "version": "1.0.0",
+  "description": "Game(Gay)Dev pet project",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@web/dev-server": "^0.4.6",
+    "typescript": "^5.7.2"
+  },
+  "scripts": {
+  "ts": "tsc -w",
+  "serve": "cd dist && web-dev-server --node-resolve --watch --open --app-index index.html",
+  "dev": "yarn ts & yarn serve"
+ }
+}
